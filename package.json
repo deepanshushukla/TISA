@@ -9,8 +9,7 @@
     "nodemon": "^1.7.1",
     "body-parser": "^1.14.1",
     "fb": "^0.7.3",
-    "mongodb": "^2.0.45",
-    "monk": "^1.0.1"
+    "mongodb": "^2.0.45"
   },
   "devDependencies": {},
   "scripts": {

@@ -5,7 +5,6 @@ var express = require('express');
 //hello uu
 var facebook = require('./facebook');
 var mongo = require('mongodb').MongoClient;
-var monk = require('monk');
 var constant = require('./utils/appconstants');
 var app = express();
 var FB = require('fb');
