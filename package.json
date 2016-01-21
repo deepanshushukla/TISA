@@ -1,0 +1,22 @@
+{
+  "name": "tisa",
+  "version": "1.0.0",
+  "description": "A Stammer freely App",
+  "main": "server.js",
+  "dependencies": {
+    "express": "^4.13.3",
+    "mongoose": "^4.1.10",
+    "nodemon": "^1.7.1",
+     "body-parser":"^1.14.1",
+     "fb":"^0.7.3",
+     "mongodb":"^2.0.45"
+
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "deepanshu shukla",
+  "license": "ISC"
+}
