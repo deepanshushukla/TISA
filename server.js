@@ -22,8 +22,8 @@ var apputils = require('./utils/apputils')
 //});
 
 app.get('/singlechatID', function(req, res){
- // var participant = req.query.participants;
-    var participant='561fe33c8b44d1941c61f5b8,561fe3bedc163d4119d1c7a, 565820c785aaf9c40edea31d'
+    var participant = req.query.participants;
+    //var participant='561fe33c8b44d1941c61f5b8,561fe3bedc163d4119d1c7a, 565820c785aaf9c40edea31d'
     participant=participant.split(',').sort().join(',').trim();
     singleChat.findOne({ participants: participant }, function(err, row) {
         if (err) console.error(err);
@@ -61,67 +61,64 @@ app.get('/multiplechatID', function(req, res){
     });
 });
 app.get('/login', function(req, res){
-//  var accessToken = req.query.accessToken;
+  var accessToken = req.query.accessToken;
     // Find a single movie by name.
-//    FB.setAccessToken(accessToken);
-    var objecttosave={
-        "email":'deeeeep1790@gmail.com',
-        "name":'shukls',
-        "picture":'mypic'
-    }
-
-    User.findOne({ email: objecttosave.email }, function(err, user) {
-        if (err) console.error(err);
-        if(user){
-            apputils.getSuccessResponse(res , user)
-             }
-        else{
-            var newuser=new User(objecttosave);
-            newuser.save(function (err, newuser) {
-                if (err) console.log(err);
-                apputils.getSuccessResponse(res , newuser)
-
-            });
+    FB.setAccessToken(accessToken);
+    //var objecttosave={
+    //    "email":'deeeeep1790@gmail.com',
+    //    "name":'shukls',
+    //    "picture":'mypic'
+    //}
+        FB.api('\me', { fields: ['id', 'name','email','picture'] }, function (response) {
+        if (!response || response.error) {
+            console.log(!response ? 'error occurred' : response.error);
+            return;
         }
-    });
-//    FB.api('\me', { fields: ['id', 'name','email','picture'] }, function (response) {
-//        if (!response || response.error) {
-//            console.log(!response ? 'error occurred' : response.error);
-//            return;
-//        }
-//        var useremail = response.email;
-//
-//        User.findOne({ email: useremail }, function(err, user) {
-//            if (err) return console.error(err);
-//
-//            res.send(user);
-//        });
-//    });
+        var useremail = response.email;
 
-    function handleError(err, res, req){
-        setHeadersForCrossDomainIssues(res);
-        console.log(err)
-        if(err.errorCode){
-            if(err.error) console.warn(err.error.stack);
-            if(! req._dumped){
-                apputils.getErrorResponse(res,err);
-            }
-        }else{
-            apputils.getErrorResponse(res,appUtil.exceptions.getUnknownErrorException());
+        //User.findOne({ email: useremail }, function(err, user) {
+        //    if (err) return console.error(err);
+        //
+        //    res.send(user);
+        //});
+        User.findOne({ email: useremail }, function(err, user) {
+                if (err) console.error(err);
+                if(user){
+                    apputils.getSuccessResponse(res , user)
+                }
+                else{
+                    var newuser=new User(objecttosave);
+                    newuser.save(function (err, newuser) {
+                        if (err) console.log(err);
+                        apputils.getSuccessResponse(res , newuser)
+
+                    });
+                }
+         });
+    });
+ 
+});
+
+function setHeadersForCrossDomainIssues(response){
+    response.set('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
+    response.set('Access-Control-Allow-Headers', 'X-PINGOTHER');
+    response.set('Access-Control-Allow-Origin', appUtil.appConstants.env.WEBSITE_URL);
+    response.set('Access-Control-Allow-Credentials', true);
+}
+
+function handleError(err, res, req){
+    setHeadersForCrossDomainIssues(res);
+    console.log(err)
+    if(err.errorCode){
+        if(err.error) console.warn(err.error.stack);
+        if(! req._dumped){
+            apputils.getErrorResponse(res,err);
         }
+    }else{
+        apputils.getErrorResponse(res,appUtil.exceptions.getUnknownErrorException());
     }
-    app.use(function(err, req, res, next) {
-        handleError(err, res, req);
-    });
-
-    function setHeadersForCrossDomainIssues(response){
-        response.set('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
-        response.set('Access-Control-Allow-Headers', 'X-PINGOTHER');
-        response.set('Access-Control-Allow-Origin', appUtil.appConstants.env.WEBSITE_URL);
-        response.set('Access-Control-Allow-Credentials', true);
-    }
-
-
-
+}
+app.use(function(err, req, res, next) {
+    handleError(err, res, req);
 });
     app.listen(process.env.PORT || 5000);
