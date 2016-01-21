@@ -26,14 +26,14 @@ app.get('/singlechatID', function(req, res){
     //var participant='561fe33c8b44d1941c61f5b8,561fe3bedc163d4119d1c7a, 565820c785aaf9c40edea31d'
     participant=participant.split(',').sort().join(',').trim();
     singleChat.findOne({ participants: participant }, function(err, row) {
-        if (err) console.error(err);
+        if (err) apputils.getErrorResponse(res , err)
         if(row){
             apputils.getSuccessResponse(res , row)
         }
         else{
             var newChat=new singleChat({ participants: participant });
             newChat.save(function (err, newchat) {
-                if (err) console.log(err);
+                if (err) apputils.getErrorResponse(res , err)
                 apputils.getSuccessResponse(res , newchat)
 
             });
@@ -53,7 +53,7 @@ app.get('/multiplechatID', function(req, res){
         else{
             var newChat=new multipleChat({ participants: participant });
             newChat.save(function (err, newchat) {
-                if (err) console.log(err);
+                if (err) apputils.getErrorResponse(res , err)
                 apputils.getSuccessResponse(res , newchat)
 
             });
@@ -75,14 +75,14 @@ app.get('/login', function(req, res){
                 "picture":response.picture
             }
         User.findOne({ email: objecttosave.email }, function(err, user) {
-                if (err) console.error(err);
+                if (err) apputils.getErrorResponse(res , err)
                 if(user){
                     apputils.getSuccessResponse(res , user)
                 }
                 else{
                     var newuser=new User(objecttosave);
                     newuser.save(function (err, newuser) {
-                        if (err) console.log(err);
+                        if (err) apputils.getErrorResponse(res , err)
                         apputils.getSuccessResponse(res , newuser)
 
                     });
