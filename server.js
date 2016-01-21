@@ -64,24 +64,17 @@ app.get('/login', function(req, res){
   var accessToken = req.query.accessToken;
     // Find a single movie by name.
     FB.setAccessToken(accessToken);
-    //var objecttosave={
-    //    "email":'deeeeep1790@gmail.com',
-    //    "name":'shukls',
-    //    "picture":'mypic'
-    //}
-        FB.api('\me', { fields: ['id', 'name','email','picture'] }, function (response) {
+     FB.api('\me', { fields: ['id', 'name','email','picture'] }, function (response) {
         if (!response || response.error) {
             console.log(!response ? 'error occurred' : response.error);
             return;
         }
-        var useremail = response.email;
-
-        //User.findOne({ email: useremail }, function(err, user) {
-        //    if (err) return console.error(err);
-        //
-        //    res.send(user);
-        //});
-        User.findOne({ email: useremail }, function(err, user) {
+        var objecttosave={
+                "email":response.email,
+                "name":response.name,
+                "picture":response.picture
+            }
+        User.findOne({ email: objecttosave.email }, function(err, user) {
                 if (err) console.error(err);
                 if(user){
                     apputils.getSuccessResponse(res , user)
@@ -96,7 +89,7 @@ app.get('/login', function(req, res){
                 }
          });
     });
- 
+
 });
 
 function setHeadersForCrossDomainIssues(response){
