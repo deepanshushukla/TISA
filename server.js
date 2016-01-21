@@ -66,7 +66,7 @@ app.get('/login', function(req, res){
     FB.setAccessToken(accessToken);
      FB.api('\me', { fields: ['id', 'name','email','picture'] }, function (response) {
         if (!response || response.error) {
-            console.log(!response ? 'error occurred' : response.error);
+            apputils.getErrorResponse(res,response.error);
             return;
         }
         var objecttosave={
